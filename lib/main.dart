@@ -1,10 +1,13 @@
-import 'dart:async';
-import 'dart:math';
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
-
+import 'animations/3dRoller/3dRollerScreen.dart';
 import 'animations/particles/particleScreen.dart';
+
+class PageType {
+  int id;
+  String title;
+  String route;
+  PageType({this.id, this.title, this.route});
+}
 
 void main() {
   runApp(MyApp());
@@ -20,7 +23,17 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: 'Interactive Animation'),
+      initialRoute: '/',
+      routes: {
+        '/': (BuildContext context) =>
+            MyHomePage(title: 'Interactive Animation'),
+        '/particle': (BuildContext context) => ParticleScreen(
+              title: "Tab to create",
+            ),
+        '/3dRoller': (BuildContext context) => Three3DRollerScreen(
+              title: "Tab to create",
+            ),
+      },
     );
   }
 }
@@ -34,6 +47,11 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  List<PageType> pageList = [
+    PageType(id: 1, title: 'Tap to create particles', route: "/particle"),
+    PageType(id: 2, title: 'rotate 3D roller', route: "/3dRoller"),
+  ];
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -43,16 +61,12 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Container(
         child: ListView.builder(
-            itemCount: 1,
+            itemCount: pageList.length,
             itemBuilder: (context, index) {
               return ListTile(
-                title: Text('Tap to create particles'),
-                onTap: () => {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => ParticleScreen(
-                            title: "Tap to create particles",
-                          )))
-                },
+                title: Text(pageList[index].title),
+                onTap: () =>
+                    {Navigator.of(context).pushNamed(pageList[index].route)},
               );
             }),
       ),
